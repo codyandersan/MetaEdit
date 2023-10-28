@@ -1,6 +1,6 @@
 import requests
 import music_tag
-
+import os
 
 def append_metadata(song_path, title, artist, artwork_path, lyrics=None):
     # Load the song file
@@ -68,22 +68,35 @@ def download(url, save_path):
 
 
 def process(song_id):
-    print("Fetching song details")    
+    print("Fetching song details")
     song_details = fetch_song_details(song_id)
 
     print("Extracting song info")
     info = extract_song_info(song_details)
 
+    fpath = f"/tmp/{info[0]} — {info[3].split(',')[0]}.m4a"
+
     print("Downloading song")
-    download(info[2], "/tmp/song.mp3")
-    
+    download(info[2], fpath)
+
     print("Downloading artwork")
     download(info[1], "/tmp/artwork.png")
 
     print("Appending metadata")
-    append_metadata("/tmp/song.mp3", info[0], info[3], "/tmp/artwork.png")
-    
+    append_metadata(fpath, info[0], info[3], "/tmp/artwork.png")
+
     print("Done!")
+
+    return fpath
+
+def empty_tmp():
+    for file in os.listdir("/tmp"):
+        file_path = os.path.join("/tmp", file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            print(f"Error deleting file {file_path}: {e}")
 
 
 if __name__ == "__main__":
