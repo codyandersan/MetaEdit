@@ -14,8 +14,10 @@ def append_metadata(song_path, title, artist, artwork_path, lyrics=None):
 
     # Set the artwork
     with open(artwork_path, "rb") as img_in:
-        f["artwork"] = img_in.read()
-
+        try:
+            f["artwork"] = img_in.read()
+        except:
+            pass
     # Save the metadata
     f.save()
 
