@@ -1,3 +1,4 @@
+import os
 from flask import Flask, send_file, request, render_template
 from helper import process, empty_tmp
 
@@ -22,5 +23,8 @@ def get_song():
     return send_file(fpath, as_attachment=True)
 
 
+
+# Get PORT from environment variable
+port = os.getenv("PORT")
 if __name__ == "__main__":
-    app.run()
+    app.run(port=port)
