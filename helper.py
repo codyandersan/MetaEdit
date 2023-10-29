@@ -1,6 +1,7 @@
+import os
 import requests
 import music_tag
-import os
+from lyrics import get_lyrics
 
 def append_metadata(song_path, title, artist, artwork_path, lyrics=None):
     # Load the song file
@@ -82,8 +83,14 @@ def process(song_id):
     print("Downloading artwork")
     download(info[1], "/tmp/artwork.png")
 
+    if info[4]:
+        print("Fetching lyrics")
+        lyrics = get_lyrics(info[0], info[3])
+    else:
+        lyrics = None
+
     print("Appending metadata")
-    append_metadata(fpath, info[0], info[3], "/tmp/artwork.png")
+    append_metadata(fpath, info[0], info[3], "/tmp/artwork.png", lyrics=lyrics)
 
     print("Done!")
 
